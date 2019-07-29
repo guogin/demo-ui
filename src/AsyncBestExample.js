@@ -1,0 +1,30 @@
+import {getJSON, addHtmlToPage, addTextToPage, resetPageContent} from './Utils';
+
+function asyncBestExample(e) {
+    e.preventDefault();
+
+    resetPageContent();
+
+    getJSON('/api/story.json').then(function (story) {
+        addHtmlToPage(story.heading);
+        // Map our array of chapter urls
+        // to an array of chapter json promises
+        return story.chapterUrls.map(getJSON).reduce(function(chain, chapterPromise) {
+            // Use reduce to chain the promises together,
+            // but adding content to the page for each chapter
+            return chain.then(function() {
+                return chapterPromise;
+            }).then(function(chapter) {
+                addHtmlToPage(chapter.html);
+            });
+        }, Promise.resolve());
+    }).then(function() {
+        addTextToPage("All done");
+    }).catch(function(err) {
+        // catch any error that happened along the way
+        addTextToPage("Argh, broken: " + err.message);
+    });
+
+}
+
+export default asyncBestExample;
