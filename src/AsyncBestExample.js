@@ -1,9 +1,7 @@
-import {getJSON, addHtmlToPage, addTextToPage, resetPageContent} from './Utils';
+import {getJSON, addHtmlToPage, addTextToPage} from './Utils';
 
-function asyncBestExample(e) {
-    e.preventDefault();
-
-    resetPageContent();
+function asyncBestExample(fnStartCallBack, fnCompleteCallBack) {
+    fnStartCallBack();
 
     getJSON('/api/story.json').then(function (story) {
         addHtmlToPage(story.heading);
@@ -23,6 +21,8 @@ function asyncBestExample(e) {
     }).catch(function(err) {
         // catch any error that happened along the way
         addTextToPage("Argh, broken: " + err.message);
+    }).then(function () {
+        fnCompleteCallBack();
     });
 
 }

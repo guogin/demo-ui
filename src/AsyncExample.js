@@ -1,9 +1,7 @@
-import {getJSON, addHtmlToPage, addTextToPage, resetPageContent} from './Utils';
+import {getJSON, addHtmlToPage, addTextToPage} from './Utils';
 
-function asyncExample(e) {
-    e.preventDefault();
-
-    resetPageContent();
+function asyncExample(fnStartCallBack, fnCompleteCallBack) {
+    fnStartCallBack();
 
     getJSON('/api/story.json').then(function (story) {
         addHtmlToPage(story.heading);
@@ -23,6 +21,9 @@ function asyncExample(e) {
     }).catch(function (err) {
         // Catch any error that happened along the way
         addTextToPage("Argh, broken: " + err.message);
+    }).then(function () {
+        // Always hide the spinner
+        fnCompleteCallBack();
     });
 
 }

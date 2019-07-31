@@ -1,9 +1,7 @@
-import {getJSONSync, addHtmlToPage, addTextToPage, resetPageContent} from './Utils';
+import {getJSONSync, addHtmlToPage, addTextToPage} from './Utils';
 
-function syncExample(e) {
-    e.preventDefault();
-
-    resetPageContent();
+function syncExample(fnStartCallBack, fnCompleteCallBack) {
+    fnStartCallBack();
 
     try {
         var story = getJSONSync('/api/story.json');
@@ -18,6 +16,8 @@ function syncExample(e) {
     } catch (err) {
         addTextToPage("Argh, broken: " + err.message);
     }
+
+    fnCompleteCallBack();
 }
 
 export default syncExample;
